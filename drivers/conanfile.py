@@ -26,4 +26,3 @@ class demos(ConanFile):
         # Replace __device__ with the name of the library
         # self.requires("libhal-__device__/[^3.0.0 || latest]")
         # self.requires("libhal-lpc40/[^3.0.0 || latest]")
-        # self.requires("libhal-micromod/[^1.0.1 || latest]")

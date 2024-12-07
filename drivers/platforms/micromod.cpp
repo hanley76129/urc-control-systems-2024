@@ -1,4 +1,5 @@
 #include <libhal-micromod/micromod.hpp>
+#include <libhal-util/bit_bang_i2c.hpp>
 
 #include "../hardware_map.hpp"
 
@@ -20,10 +21,12 @@ application_framework initialize_platform()
     .out_pin0 = &hal::micromod::v1::output_g0(),
     .out_pin1 = &hal::micromod::v1::output_g1(),
     .out_pin2 = &hal::micromod::v1::output_g2(),
-    .pwm0 = &hal::micromod::v1::pwm0(),
-    .pwm1 = &hal::micromod::v1::pwm1(),
-    .adc0 = &hal::micromod::v1::a0(),
-    .adc1 = &hal::micromod::v1::a1(),
+    .scl = &hal::micromod::v1::output_g3(),
+    .sda = &hal::micromod::v1::output_g4(),
+    // .pwm0 = &hal::micromod::v1::pwm0(),
+    // .pwm1 = &hal::micromod::v1::pwm1(),
+    // .adc0 = &hal::micromod::v1::a0(),
+    // .adc1 = &hal::micromod::v1::a1(),
     // .esp,
     .i2c = &hal::micromod::v1::i2c(),
     .steady_clock = &hal::micromod::v1::uptime_clock(),

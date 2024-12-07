@@ -36,14 +36,18 @@ struct application_framework
   hal::output_pin* out_pin0;
   hal::output_pin* out_pin1;
   hal::output_pin* out_pin2;
-  hal::pwm* pwm0;
-  hal::pwm* pwm1;
-  hal::adc* adc0;
-  hal::adc* adc1;
+  hal::output_pin* scl;
+  hal::output_pin* sda;
+  // hal::pwm* pwm0;
+  // hal::pwm* pwm1;
+  // hal::adc* adc0;
+  // hal::adc* adc1;
   // hal::serial* esp;
   hal::i2c* i2c;
+
   hal::steady_clock* steady_clock;
   hal::callback<void()> reset;
+  
 };
 
 // Application function must be implemented by one of the compilation units
