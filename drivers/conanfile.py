@@ -22,6 +22,7 @@ class demos(ConanFile):
     def requirements(self):
         bootstrap = self.python_requires["libhal-bootstrap"]
         bootstrap.module.add_demo_requirements(self)
+        self.requires("libhal-soft/[^5.3.1]")
         # Change 3.0.0 to the correct major release number
         # Replace __device__ with the name of the library
         # self.requires("libhal-__device__/[^3.0.0 || latest]")

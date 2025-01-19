@@ -23,6 +23,7 @@
 #include <libhal/pwm.hpp>
 #include <libhal/serial.hpp>
 #include <libhal/steady_clock.hpp>
+#include <libhal-util/bit_bang_i2c.hpp> 
 
 namespace sjsu::drivers {
 struct application_framework
@@ -38,6 +39,7 @@ struct application_framework
   hal::output_pin* out_pin2;
   hal::output_pin* scl;
   hal::output_pin* sda;
+  
   // hal::pwm* pwm0;
   // hal::pwm* pwm1;
   // hal::adc* adc0;

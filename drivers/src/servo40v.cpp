@@ -14,25 +14,48 @@ sjsu::drivers::Servo40V::Servo40V(hal::i2c& p_i2c, hal::steady_clock& p_clock, h
 
 void sjsu::drivers::Servo40V::writeRegister(char reg, float value) {
     std::array<hal::byte, 5> data;
-    data[0] = static_cast<hal::byte>(reg);
-    std::memcpy(&data[1], &value, sizeof(float));
-    hal::write(m_i2c, deviceAddress, data);
+    data[0] = static_cast<hal::byte> (reg);
+
+    union float_to_bits {
+        hal::u32 bits;
+        float num;
+    };
+    float_to_bits converter;
+    converter.num = value;
+
+    data[1] = static_cast<hal::byte> ((converter.bits >> 24) & 0xFF);
+    data[2]= static_cast<hal::byte> ((converter.bits >>16) & 0xFF);
+    data[3] = static_cast <hal::byte> ((converter.bits >>8) &0xFF);
+    data[4]= static_cast<hal::byte> (converter.bits & 0xFF);
     
-    //hal::write(m_i2c, deviceAddress, std::array<hal::byte, 2> {reg, value});
+    hal::write(m_i2c, deviceAddress, data); 
 }
 
 // Helper function to read a float value from a register
 float sjsu::drivers::Servo40V::readRegister(char reg) {
-     std::array<hal::byte, 4> data;
-    hal::write(m_i2c, deviceAddress, std::array<hal::byte, 1>{static_cast<hal::byte>(reg)});
+    hal::write(m_i2c, deviceAddress, std::array<hal::byte, 1> {static_cast<hal::byte>(reg)});
+
+    std::array<hal::byte, 4> data;
     hal::read(m_i2c, deviceAddress, data);
+    union bits_to_float{
+        hal::u32 bits;
+        float value;
+    };
+    bits_to_float converter;
+    //big endian
+    // uint32_t intRepresentation = (static_cast<uint32_t>(data[0]) << 24) |
+    //                               (static_cast<uint32_t>(data[1]) << 16) |
+    //                               (static_cast<uint32_t>(data[2]) << 8)  |
+    //                               static_cast<uint32_t>(data[3]);
 
-    float value;
-    std::memcpy(&value, data.data(), sizeof(float));
-    //float* floatPointer = reinterpret_cast<float*>(&data);
-    //value = *floatPointer;
-
-    return value;
+    //small endian
+    converter.bits=(static_cast<uint32_t>(data[3]) << 24) |
+                            (static_cast<uint32_t>(data[2]) << 16) |
+                            (static_cast<uint32_t>(data[1]) << 8)  |
+                            static_cast<uint32_t>(data[0]);
+    
+   
+    return converter.value;
 }
 
 // PID Constants
