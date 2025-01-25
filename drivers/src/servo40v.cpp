@@ -23,10 +23,18 @@ void sjsu::drivers::Servo40V::writeRegister(char reg, float value) {
     float_to_bits converter;
     converter.num = value;
 
-    data[1] = static_cast<hal::byte> ((converter.bits >> 24) & 0xFF);
-    data[2]= static_cast<hal::byte> ((converter.bits >>16) & 0xFF);
-    data[3] = static_cast <hal::byte> ((converter.bits >>8) &0xFF);
-    data[4]= static_cast<hal::byte> (converter.bits & 0xFF);
+    //big endian
+    // data[1] = static_cast<hal::byte> ((converter.bits >> 24) & 0xFF);
+    // data[2]= static_cast<hal::byte> ((converter.bits >>16) & 0xFF);
+    // data[3] = static_cast <hal::byte> ((converter.bits >>8) &0xFF);
+    // data[4]= static_cast<hal::byte> (converter.bits & 0xFF);
+
+    //small endian
+    data[1] = static_cast<hal::byte>(converter.bits & 0xFF);          
+    data[2] = static_cast<hal::byte>((converter.bits >> 8) & 0xFF);  
+    data[3] = static_cast<hal::byte>((converter.bits >> 16) & 0xFF); 
+    data[4] = static_cast<hal::byte>((converter.bits >> 24) & 0xFF);
+
     
     hal::write(m_i2c, deviceAddress, data); 
 }
@@ -43,12 +51,12 @@ float sjsu::drivers::Servo40V::readRegister(char reg) {
     };
     bits_to_float converter;
     //big endian
-    // uint32_t intRepresentation = (static_cast<uint32_t>(data[0]) << 24) |
+    // converter.bits = (static_cast<uint32_t>(data[0]) << 24) |
     //                               (static_cast<uint32_t>(data[1]) << 16) |
     //                               (static_cast<uint32_t>(data[2]) << 8)  |
     //                               static_cast<uint32_t>(data[3]);
 
-    //small endian
+    //little endian
     converter.bits=(static_cast<uint32_t>(data[3]) << 24) |
                             (static_cast<uint32_t>(data[2]) << 16) |
                             (static_cast<uint32_t>(data[1]) << 8)  |
