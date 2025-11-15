@@ -76,7 +76,7 @@ void application()
   //   auto& console = *p_resources.terminal;
 
   auto clock_pin = resources::output_pin_0();
-  auto data_pin = resources::output_pin_1();
+  auto data_pin = resources::output_pin_2();
 
   light_strip<35> lights;
   sk9822 driver(clock_pin, data_pin, clock);
@@ -90,8 +90,8 @@ void application()
                             .driver = &driver,
                             .clock = clock };
 
-  // beedoo_beedoo_beedoo(hardware, hal::color::red, hal::color::black, 100ms);
-  rampup_rampdown(hardware);
+  beedoo_beedoo_beedoo(hardware, colors::RED, colors::BLACK, 100ms);
+  //rampup_rampdown(hardware);
 
   while (true) {
     // Print message
